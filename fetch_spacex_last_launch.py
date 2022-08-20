@@ -3,7 +3,7 @@ import argparse
 from request_helpers import download_file_from_url
 from request_helpers import get_json_from_api_request
 
-def fetch_spacex_last_launch(launch='latest'):
+def fetch_spacex_last_launch(launch):
     url = f'https://api.spacexdata.com/v5/launches/{launch}'
            
     request_json = get_json_from_api_request(url)
@@ -21,6 +21,7 @@ def create_parser():
     parser.add_argument(
         'launch',
         nargs='?',
+        default='latest',
         help='ID SpaceX launch'
     )
     
