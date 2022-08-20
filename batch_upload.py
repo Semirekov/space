@@ -5,7 +5,7 @@ import os.path
 import random
 import time
 
-from bot import upload
+from bot import upload_image
 
 
 def create_parser():
@@ -41,7 +41,6 @@ if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
     
-    while True:
-        print(f'Цикл:', count)
+    while True:        
         upload_photos()        
         time.sleep(args.pause)    
