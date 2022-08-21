@@ -30,7 +30,7 @@ def upload_image(filename):
     asyncio.run(
         upload_file(
             os.environ['TELEGRAM_TOKEN'],
-            os.environ['CHAT_ID'],
+            os.environ['TELEGRAM_CHAT_ID'],
             filename
         )
     )
