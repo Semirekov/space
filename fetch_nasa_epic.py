@@ -10,9 +10,12 @@ from request_helpers import download_file_from_url
 from request_helpers import get_json_from_api_request
 
 def fetch_nasa_epic(token):
-    url = f'https://api.nasa.gov/EPIC/api/natural?api_key={token}'    
+    url = f'https://api.nasa.gov/EPIC/api/natural'
+    params = {
+        'api_key': token
+    }
     
-    response_json = get_json_from_api_request(url)
+    response_json = get_json_from_api_request(url, params)
 
     for index, images in enumerate(response_json):
         img_name = images['image']
