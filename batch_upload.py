@@ -19,15 +19,21 @@ def create_parser():
     return parser
 
 
+def append_images(parent_path, files):
+    images = []    
+    for file_name in files:
+        file_path = os.path.join(parent_path, file_name)
+        if os.path.getsize(file_path) <= 20_000_000:
+            images.append(f'{file_path}')
+
+    return images
+
+                
 def upload_photos(parent_path = 'images'):
 
-    images = []
-    
+    images = []    
     for parent_path, dirs, files in os.walk(parent_path):
-        for file_name in files:
-            file_path = os.path.join(parent_path, file_name)
-            if os.path.getsize(file_path) <= 20_000_000:
-                images.append(f'{file_path}')
+        images += append_images(parent_path, files)
         
     random.shuffle(images)
     for image in images:
@@ -43,4 +49,5 @@ if __name__ == '__main__':
     
     while True:        
         upload_photos()        
-        time.sleep(args.pause)    
+        time.sleep(args.pause)
+        
