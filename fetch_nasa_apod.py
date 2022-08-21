@@ -1,3 +1,4 @@
+import argparse
 import os
 from os.path import split
 from os.path import splitext
@@ -10,12 +11,29 @@ from request_helpers import download_file_from_url
 from request_helpers import get_json_from_api_request
 
 
-def fetch_nasa_apod(token):        
-    url = f'https://api.nasa.gov/planetary/apod?api_key={token}'
+def create_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        'count',
+        nargs='?',
+        type=int,
+        default=50,
+        help='Сколько нужно скачать фото'
+    )
+
+    return parser
+
+    
+def fetch_nasa_apod(token, count):        
+    url = f'https://api.nasa.gov/planetary/apod'
+    params = {
+        'api_key': token,
+        'count' : count
+    }
     
     response_json = get_json_from_api_request(
         url,
-        {'count' : 50}
+        params
     )
 
     for index, media in enumerate(response_json):
@@ -34,5 +52,8 @@ def fetch_nasa_apod(token):
 
 
 if __name__ == '__main__':
+    parser = create_parser()
+    args = parser.parse_args()
+    
     load_dotenv()    
-    fetch_nasa_apod(os.environ['NASA_TOKEN'])
+    fetch_nasa_apod(os.environ['NASA_TOKEN'], args.count)
