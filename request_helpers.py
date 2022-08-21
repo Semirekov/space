@@ -18,7 +18,7 @@ def download_file_from_url(url, filename):
         file.write(response.content)        
 
 
-def get_json_from_api_request(url, params={}):    
+def get_json_from_api_request(url, params=None):    
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
