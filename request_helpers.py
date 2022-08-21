@@ -1,6 +1,5 @@
 from os import makedirs
-from os.path import split
-from os.path import splitext
+from os.path import join
 from urllib.parse import urlsplit
 
 import requests
@@ -11,8 +10,8 @@ def download_file_from_url(url, filename):
     response.raise_for_status()
 
     dirname = 'images'
-    makedirs(dirname, exist_ok=True)
-    path = f'{dirname}/{filename}'
+    makedirs(dirname, exist_ok=True)    
+    path = join(dirname, filename)
 
     with open(path, 'wb') as file:
         file.write(response.content)        
