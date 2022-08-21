@@ -31,10 +31,7 @@ def fetch_nasa_apod(token, count):
         'count' : count
     }
     
-    response_json = get_json_from_api_request(
-        url,
-        params
-    )
+    response_json = get_json_from_api_request(url, params)
 
     for index, media in enumerate(response_json):
         if media['media_type'] == 'image':            
