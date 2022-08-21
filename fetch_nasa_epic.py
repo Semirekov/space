@@ -1,3 +1,5 @@
+from datetime import date
+from datetime import datetime
 import os
 from os.path import split
 from os.path import splitext
@@ -19,15 +21,15 @@ def fetch_nasa_epic(token):
 
     for index, images in enumerate(response_json):
         img_name = images['image']
-        imp_day, img_time = images['date'].split()
-        img_date = imp_day.replace('-', '/')
-                
+        
+        img_date = datetime.fromisoformat(images['date'])
+        img_date = img_date.strftime("%Y/%m/%d")                  
         img_url = f'https://epic.gsfc.nasa.gov/archive/natural/{img_date}/png/{img_name}.png'
                 
         download_file_from_url(
             img_url, 
             f'nasa_epic_{index:02}.png'
-        )
+        )        
 
 
 if __name__ == '__main__':
