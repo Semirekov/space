@@ -27,7 +27,7 @@ Python должен быть уже установлен.
 ```
 NASA_TOKEN=<YOUR_NASA_TOKEN>
 TELEGRAM_TOKEN=<YOUR_TELEGRAM_TOKEN>
-CHAT_ID=<YUOR_CHAT_ID> #Example – @spacefanat
+TELEGRAM_CHAT_ID=<YUOR_CHAT_ID> #Example – @spacefanat
 ```
 
 ## Как использовать
