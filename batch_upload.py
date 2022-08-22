@@ -1,9 +1,12 @@
 import argparse
+from datetime import datetime
 import os
 import os.path
 
 import random
 import time
+
+import telegram
 
 from bot import upload_image
 
@@ -46,8 +49,25 @@ if __name__ == '__main__':
 
     parser = create_parser()
     args = parser.parse_args()
+    try_connect_count = 0
+    sleep_time = 30
+    sleep_time_limit = 240
     
-    while True:        
-        upload_photos()        
-        time.sleep(args.pause)
-        
+    while True:
+        try:
+            upload_photos()        
+            time.sleep(args.pause)
+        except telegram.error.TimedOut:
+            try_connect_count += 1
+            now = datetime.now()            
+            print(try_connect_count, 'Ошибка подключения: ', now.strftime("%d-%m-%Y %H:%M:%S"))
+            
+            if try_connect_count == 1:                
+                continue
+            
+            time.sleep(sleep_time)
+            if sleep_time < sleep_time_limit:
+                sleep_time *= 2
+
+            
+            
