@@ -7,6 +7,11 @@
 
 ## Как установить
 Python должен быть уже установлен.
+Для установки зависимостей воспользуйтесь командой 'pip' или 'pip3'.
+
+```
+  pip install -r requirements.txt
+```
 
 Установите библиотеку python-telegram-bot
 
@@ -14,7 +19,6 @@ Python должен быть уже установлен.
   git clone https://github.com/python-telegram-bot/python-telegram-bot
   python3 setup.py install
 ```
-
 
 Получите токены [NASA](https://api.nasa.gov/) и [Telegram](https://way23.ru/%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D0%B1%D0%BE%D1%82%D0%B0-%D0%B2-telegram.html), сохраните их в файле .env вместе с "chat_id" телеграм-канала
 
