@@ -1,6 +1,5 @@
 from os import makedirs
 from os.path import join
-from urllib.parse import urlsplit
 
 import requests
 
