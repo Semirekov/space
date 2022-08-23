@@ -5,11 +5,10 @@ from urllib.parse import urlsplit
 import requests
 
 
-def download_file_from_url(url, filename):    
+def download_file_from_url(url, filename, dirname='images'):    
     response = requests.get(url)
     response.raise_for_status()
-
-    dirname = 'images'
+    
     makedirs(dirname, exist_ok=True)    
     path = join(dirname, filename)
 
