@@ -13,21 +13,18 @@ Python должен быть уже установлен.
   pip install -r requirements.txt
 ```
 
-Установите библиотеку python-telegram-bot
-
-```
-  git clone https://github.com/python-telegram-bot/python-telegram-bot
-  python3 setup.py install
-```
-
 Получите токены [NASA](https://api.nasa.gov/) и [Telegram](https://way23.ru/%D1%80%D0%B5%D0%B3%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%86%D0%B8%D1%8F-%D0%B1%D0%BE%D1%82%D0%B0-%D0%B2-telegram.html), сохраните их в файле .env вместе с "chat_id" телеграм-канала
-
-
 
 ```
 NASA_TOKEN=<YOUR_NASA_TOKEN>
 TELEGRAM_TOKEN=<YOUR_TELEGRAM_TOKEN>
 TELEGRAM_CHAT_ID=<YUOR_CHAT_ID> #Example – @spacefanat
+```
+
+При желании можно в этом же файле задать каталог в который будут сохраняться фотографии. По умолчанию — подкаталог "images".
+
+```
+TARGET_DIR=<YOUR_DIR>
 ```
 
 ## Как использовать
@@ -43,6 +40,7 @@ TELEGRAM_CHAT_ID=<YUOR_CHAT_ID> #Example – @spacefanat
 ```
 
 #### NASA APOD
+Необязательный аргумент "count" — cколько нужно скачать фото. По умолчанию 50.
 ```
   python3 fetch_nasa_apod.py
 ```
@@ -52,16 +50,16 @@ TELEGRAM_CHAT_ID=<YUOR_CHAT_ID> #Example – @spacefanat
   python3 fetch_nasa_epic.py
 ```
 
-#### Post One image into telegram chanal
+#### Post One image into telegram channel
 
-Принимает в качестве аргумента относительный путь к файлу, например:
+Принимает в качестве аргумента имя файла, например:
 ```
-  python3 bot.py 'images/space_000.jpg'
+  python3 bot.py 'space_000.jpg'
 ```
 
 #### Uploading photos from the "images" catalog on a schedule
 
-Аргумент "pause" в секундах. Задает периодичность загрузки.
+Необязательный аргумент "pause" в секундах. Задает периодичность загрузки. По умолчанию задано четыре часа (14 400 сек.)
 ```
-  python3 batch_upload.py 14400
+  python3 batch_upload.py 
 ```
