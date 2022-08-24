@@ -1,37 +1,35 @@
-from datetime import date
 from datetime import datetime
-import os
-from os.path import split
-from os.path import splitext
 
-from urllib.parse import urlsplit
+from utils_env import get_settins
+from utils_request import download_file_from_url
+from utils_request import get_json_from_api_request
 
-from dotenv import load_dotenv
 
-from request_helpers import download_file_from_url
-from request_helpers import get_json_from_api_request
-
-def fetch_nasa_epic(token):
+def get_epic_json(token):
     url = f'https://api.nasa.gov/EPIC/api/natural'
     params = {
         'api_key': token
     }
     
-    response_json = get_json_from_api_request(url, params)
+    return get_json_from_api_request(url, params)
 
-    for index, images in enumerate(response_json):
-        img_name = images['image']
-        
-        img_date = datetime.fromisoformat(images['date'])
-        img_date = img_date.strftime("%Y/%m/%d")                  
-        img_url = f'https://epic.gsfc.nasa.gov/archive/natural/{img_date}/png/{img_name}.png'
-                
-        download_file_from_url(
-            img_url, 
-            f'nasa_epic_{index:02}.png'
-        )        
+
+def get_valid_url(image):
+    img_name = image['image']
+
+    img_date = datetime.fromisoformat(image['date'])
+    img_date = img_date.strftime("%Y/%m/%d")                  
+    return f'https://epic.gsfc.nasa.gov/archive/natural/{img_date}/png/{img_name}.png'    
+
+
+def fetch_nasa_epic(token, dirname):   
+    response_json = get_epic_json(token)
+
+    for index, image in enumerate(response_json):
+        url = get_valid_url(image)                
+        download_file_from_url(url, dirname, f'nasa_epic_{index:02}.png')        
 
 
 if __name__ == '__main__':
-    load_dotenv()    
-    fetch_nasa_epic(os.environ['NASA_TOKEN'])
+    env = get_settins()
+    fetch_nasa_epic(env.nasa_token, env.dir)

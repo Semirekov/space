@@ -1,17 +1,12 @@
 import argparse
-import os
-from os.path import split
-from os.path import splitext
 
-from urllib.parse import urlsplit
-
-from dotenv import load_dotenv
-
-from request_helpers import download_file_from_url
-from request_helpers import get_json_from_api_request
+from utils_env import get_settins
+from utils_request import download_file_from_url
+from utils_request import get_json_from_api_request
+from utils_request import extract_file_ext
 
 
-def create_parser():
+def get_parser_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         'count',
@@ -21,36 +16,40 @@ def create_parser():
         help='Сколько нужно скачать фото'
     )
 
-    return parser
+    return parser.parse_args()
 
-    
-def fetch_nasa_apod(token, count):        
+
+def download_image(media_url, dirname, index):
+    file_ext = extract_file_ext(media_url)
+            
+    download_file_from_url(
+        media_url,             
+        dirname,   
+        f'nasa_apod_{index:03}{file_ext}'
+    )
+
+def get_apod_json(token, count):
     url = f'https://api.nasa.gov/planetary/apod'
     params = {
         'api_key': token,
         'count' : count
     }
     
-    response_json = get_json_from_api_request(url, params)
+    return get_json_from_api_request(url, params)
 
-    for index, media in enumerate(response_json):
-        if media['media_type'] == 'image':            
-            media_url = media['url']
-            
-            path_dir, file_name = split(
-                urlsplit(media_url).path
-            )
-            file_name, file_ext = splitext(file_name)
-            
-            download_file_from_url(
-                media_url,
-                f'nasa_apod_{index:03}{file_ext}'
-            )
+def download_only_image(apod_json, dirname):
+    for index, media in enumerate(apod_json):
+        if media['media_type'] == 'image':        
+            download_image(media['url'], dirname, index)      
 
 
-if __name__ == '__main__':
-    parser = create_parser()
-    args = parser.parse_args()
+def fetch_nasa_apod(token, dirname, count):            
+    apod_json = get_apod_json(token, count)
+    download_only_image(apod_json, dirname)
+
     
-    load_dotenv()    
-    fetch_nasa_apod(os.environ['NASA_TOKEN'], args.count)
+
+if __name__ == '__main__':    
+    args = get_parser_args()    
+    env = get_settins()
+    fetch_nasa_apod(env.nasa_token, env.dir, args.count)

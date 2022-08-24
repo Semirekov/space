@@ -1,10 +1,14 @@
 from os import makedirs
 from os.path import join
+from os.path import split
+from os.path import splitext
+
+from urllib.parse import urlsplit
 
 import requests
 
 
-def download_file_from_url(url, filename, dirname='images'):    
+def download_file_from_url(url, dirname, filename):    
     response = requests.get(url)
     response.raise_for_status()
     
@@ -19,3 +23,11 @@ def get_json_from_api_request(url, params=None):
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
+
+
+def extract_file_ext(url):
+    path_dir, file_name = split(
+        urlsplit(url).path
+    )
+    file_name, file_ext = splitext(file_name)
+    return file_ext

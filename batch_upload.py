@@ -9,66 +9,59 @@ import time
 import telegram
 
 from bot import upload_image
+from utils_env import get_settins
+from utils_file import get_file_names
 
 
-def create_parser():
+def get_parser_args():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'pause',
-        type=int,
+        'pause', 
+        type=int, 
         default=14400,
         help='pause in seconds'
     )
     
-    return parser
+    return parser.parse_args()
 
 
-def append_images(parent_path, files):
-    images = []    
-    for file_name in files:
-        file_path = os.path.join(parent_path, file_name)
-        if os.path.getsize(file_path) <= 20_000_000:
-            images.append(f'{file_path}')
+def is_valid_size(file_path, valid_size = 20_000_000):
+    return os.path.getsize(file_path) <= valid_size
 
-    return images
 
-                
-def upload_photos(parent_path = 'images'):
-
-    images = []    
-    for parent_path, dirs, files in os.walk(parent_path):
-        images += append_images(parent_path, files)
-        
+def upload_photos(parent_path, token, chat_id):
+    images = get_file_names(parent_path)    
     random.shuffle(images)
+
     for image in images:
-        upload_image(image)        
-        time.sleep(2)
+        if is_valid_size(image):
+            upload_image(image, token, chat_id)        
+            time.sleep(2)
+        
 
         
     
-if __name__ == '__main__':
+if __name__ == '__main__':    
+    args = get_parser_args()
+    env = get_settins()
 
-    parser = create_parser()
-    args = parser.parse_args()
     try_connect_count = 0
-    sleep_time = 30
-    sleep_time_limit = 240
-    
+    sleep_time, sleep_time_max = 30, 240       
+
     while True:
         try:
-            upload_photos()        
+            upload_photos(env.dir, env.telegram_token, env.chat_id)
+            break #удалить
             time.sleep(args.pause)
         except telegram.error.TimedOut:
             try_connect_count += 1
             now = datetime.now()            
             print(try_connect_count, 'Ошибка подключения: ', now.strftime("%d-%m-%Y %H:%M:%S"))
             
-            if try_connect_count == 1:                
-                continue
-            
-            time.sleep(sleep_time)
-            if sleep_time < sleep_time_limit:
-                sleep_time *= 2
+            if try_connect_count > 1:                                            
+                time.sleep(sleep_time)
+                if sleep_time < sleep_time_max:
+                    sleep_time *= 2
 
             
             

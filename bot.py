@@ -1,9 +1,10 @@
 import argparse
 import asyncio
-import os
+from os.path import join
 
-from dotenv import load_dotenv
 import telegram
+
+from utils_env import get_settins
 
 
 def create_parser():
@@ -15,8 +16,7 @@ def create_parser():
     
     return parser
 
-
-async def upload_file(token, chat_id, file):    
+async def send_telegram(token, chat_id, file):    
     bot = telegram.Bot(token)
     async with bot:        
         await bot.send_document(
@@ -25,30 +25,26 @@ async def upload_file(token, chat_id, file):
         )        
 
 
-def upload_image(filename):    
-    load_dotenv()
+def upload_image(filename, token, chat_id):    
     with open(filename, 'rb') as file:
         asyncio.run(
-            upload_file(
-                os.environ['TELEGRAM_TOKEN'],
-                os.environ['TELEGRAM_CHAT_ID'],
-                file
-            )
+            send_telegram(token, chat_id, file)
         )
 
 
 if __name__ == '__main__':
     parser = create_parser()
     args = parser.parse_args()
-    load_dotenv()
-    with open(args.filename, 'rb') as file:
-        asyncio.run(
-            upload_file(
-                os.environ['TELEGRAM_TOKEN'],
-                os.environ['TELEGRAM_CHAT_ID'],
-                file
-            )
-        )
+    
+    env = get_settins()
+    filename = join(env.dir, args.filename)
+
+    upload_image(
+        filename, 
+        env.telegram_token, 
+        env.chat_id
+    )
+
             
 
 
