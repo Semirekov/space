@@ -25,7 +25,7 @@ def get_parser_args():
     return parser.parse_args()
 
 
-def is_valid_size(file_path, valid_size = 20_000_000):
+def is_valid_size(file_path, valid_size=20_000_000):
     return os.path.getsize(file_path) <= valid_size
 
 
