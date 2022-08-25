@@ -50,8 +50,7 @@ if __name__ == '__main__':
 
     while True:
         try:
-            upload_photos(env.dir, env.telegram_token, env.chat_id)
-            break #удалить
+            upload_photos(env.dir, env.telegram_token, env.chat_id)            
             time.sleep(args.pause)
         except telegram.error.TimedOut:
             try_connect_count += 1
