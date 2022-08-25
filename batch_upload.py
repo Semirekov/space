@@ -18,6 +18,7 @@ def get_parser_args():
     parser.add_argument(
         'pause', 
         type=int, 
+        nargs="?",
         default=14400,
         help='pause in seconds'
     )
