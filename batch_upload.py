@@ -52,8 +52,9 @@ if __name__ == '__main__':
     while True:
         try:
             upload_photos(env.dir, env.telegram_token, env.chat_id)            
+            try_connect_count = 0
             time.sleep(args.pause)
-        except telegram.error.TimedOut:
+        except (telegram.error.TimedOut, telegram.error.NetworkError):
             try_connect_count += 1
             now = datetime.now()            
             print(try_connect_count, 'Ошибка подключения: ', now.strftime("%d-%m-%Y %H:%M:%S"))
